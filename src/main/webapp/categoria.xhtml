@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/template.xhtml"
+                xmlns:p="primefaces"
+                xmlns:si="jakarta.faces.composite/sicomp">
+    <ui:param name="titulo" value="Gerenciar Categorias"></ui:param>
+    <h:form id="form">
+        <si:toolbarCrud crudBean="#{categoriaBean}"></si:toolbarCrud>
+
+        <p:panelGrid columns="2" rendered="#{categoriaBean.estadoCrud != 'LISTAR'}">
+            <p:outputLabel for="nome" value="Nome"></p:outputLabel>
+            <p:inputText id="nome" value="#{categoriaBean.entidade.nome}" required="true"></p:inputText>
+
+            <p:outputLabel for="categoriaPai" value="Categoria Pai"></p:outputLabel>
+            <p:selectOneMenu id="categoriaPai" value="#{categoriaBean.entidade.categoriaPai}">
+                <f:selectItem itemLabel="-- Categoria raiz (sem pai) --" itemValue="#{null}" noSelectionOption="true" xmlns:f="jakarta.faces.core"></f:selectItem>
+                <f:selectItems xmlns:f="jakarta.faces.core" value="#{categoriaBean.categoriasParaSelecao}" var="c"
+                               itemLabel="#{categoriaBean.getRotuloIndentado(c)}" itemValue="#{c}"></f:selectItems>
+            </p:selectOneMenu>
+        </p:panelGrid>
+
+        <p:dataTable value="#{categoriaBean.entidades}" var="c" rendered="#{categoriaBean.estadoCrud == 'LISTAR'}"
+                     paginator="true" rows="10" filteredValue="#{categoriaBean.entidades}">
+            <p:column>
+                <p:commandButton value="Editar" icon="pi pi-pencil" actionListener="#{categoriaBean.editar(c)}" update=":form"></p:commandButton>
+                <p:commandButton value="Excluir" icon="pi pi-trash" actionListener="#{categoriaBean.excluir(c)}" update=":form">
+                    <p:confirm header="Confirmação" message="Deseja realmente excluir a categoria '#{c.nome}'?" icon="pi pi-exclamation-triangle"></p:confirm>
+                </p:commandButton>
+            </p:column>
+            <p:column headerText="Id" sortBy="#{c.id}">
+                #{c.id}
+            </p:column>
+            <p:column headerText="Nome" sortBy="#{c.nome}" filterBy="#{c.nome}">
+                #{c.nome}
+            </p:column>
+            <p:column headerText="Caminho hierárquico">
+                #{c.caminhoHierarquico}
+            </p:column>
+        </p:dataTable>
+
+        <p:confirmDialog global="true">
+            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"></p:commandButton>
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"></p:commandButton>
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

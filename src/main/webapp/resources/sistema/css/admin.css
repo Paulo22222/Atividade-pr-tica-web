@@ -51,7 +51,7 @@ body {
 .ui-menubar {
     background: transparent !important;
     background-color: transparent !important;
-    border: none !important; /* Optional: removes the border if desired */
+    border: none !important;
 }
 
 body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-text {
@@ -60,7 +60,6 @@ body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-text {
 body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
     color: var(--menu-text-color);
 }
-/* If you also want the inner lists/items to be transparent */
 .ui-menubar .ui-menu-list, 
 .ui-menubar .ui-menuitem {
     background:  var(--header-bg)!important;

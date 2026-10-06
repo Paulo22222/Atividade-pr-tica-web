@@ -6,7 +6,7 @@
       xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Sistema de Vendas</title>
         <h:outputStylesheet library="sistema" name="css/admin.css"></h:outputStylesheet>
     </h:head>
     <h:body>
@@ -19,7 +19,9 @@
                     <p:menubar>
                         <p:menuitem value="Dashboard" icon="pi pi-gauge" url="index.xhtml"></p:menuitem>
                         <p:submenu label="Cadastros" icon="pi pi-file-check">
-                            <p:menuitem value="Usuários" icon="pi pi-user" url="usuario.xhtml"></p:menuitem>
+                            <p:menuitem value="Marcas" icon="pi pi-tag" url="marca.xhtml"></p:menuitem>
+                            <p:menuitem value="Categorias" icon="pi pi-sitemap" url="categoria.xhtml"></p:menuitem>
+                            <p:menuitem value="Produtos" icon="pi pi-box" url="produto.xhtml"></p:menuitem>
                         </p:submenu>
                     </p:menubar>
                 </h:form>
@@ -28,7 +30,7 @@
                 <div class="conteudo-paginas">
                     <p:panel>
                         <f:facet name="header">
-                            <div class="titulo-"><i class="pi pi-arrow-circle-right"></i> #{not empty titulo?titulo:"IF Sistemas"}</div> 
+                            <div class="titulo-"><i class="pi pi-arrow-circle-right"></i> #{not empty titulo?titulo:"Sistema de Vendas"}</div> 
                         </f:facet>
                         <p:messages showDetail="true">
                             <p:autoUpdate></p:autoUpdate>
@@ -41,9 +43,8 @@
                 </div>
             </main>
             <footer class="footer-template">
-                IFTM Sistemas - 2026
+                IFTM Sistemas - Sistema de Vendas - 2026
             </footer>
         </div>
-
     </h:body>
 </html>

@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/template.xhtml"
+                xmlns:p="primefaces"
+                xmlns:f="jakarta.faces.core"
+                xmlns:si="jakarta.faces.composite/sicomp">
+    <ui:param name="titulo" value="Gerenciar Produtos"></ui:param>
+    <h:form id="form" enctype="multipart/form-data">
+        <si:toolbarCrud crudBean="#{produtoBean}"></si:toolbarCrud>
+
+        <p:panelGrid columns="2" rendered="#{produtoBean.estadoCrud != 'LISTAR'}">
+            <p:outputLabel for="nome" value="Nome"></p:outputLabel>
+            <p:inputText id="nome" value="#{produtoBean.entidade.nome}" required="true"></p:inputText>
+
+            <p:outputLabel for="descricao" value="Descrição"></p:outputLabel>
+            <p:inputTextarea id="descricao" value="#{produtoBean.entidade.descricao}" rows="3"></p:inputTextarea>
+
+            <p:outputLabel for="preco" value="Preço"></p:outputLabel>
+            <p:inputNumber id="preco" value="#{produtoBean.entidade.preco}" symbol="R$ " decimalPlaces="2"></p:inputNumber>
+
+            <p:outputLabel for="estoque" value="Qtd. em Estoque"></p:outputLabel>
+            <p:inputNumber id="estoque" value="#{produtoBean.entidade.quantidadeEstoque}" decimalPlaces="0"></p:inputNumber>
+
+            <p:outputLabel for="marca" value="Marca"></p:outputLabel>
+            <p:selectOneMenu id="marca" value="#{produtoBean.entidade.marca}">
+                <f:selectItem itemLabel="-- Selecione --" itemValue="#{null}" noSelectionOption="true"></f:selectItem>
+                <f:selectItems value="#{produtoBean.marcas}" var="m" itemLabel="#{m.nome}" itemValue="#{m}"></f:selectItems>
+            </p:selectOneMenu>
+
+            <p:outputLabel for="categoria" value="Categoria"></p:outputLabel>
+            <p:selectOneMenu id="categoria" value="#{produtoBean.entidade.categoria}">
+                <f:selectItem itemLabel="-- Selecione --" itemValue="#{null}" noSelectionOption="true"></f:selectItem>
+                <f:selectItems value="#{produtoBean.categorias}" var="c" itemLabel="#{c.caminhoHierarquico}" itemValue="#{c}"></f:selectItems>
+            </p:selectOneMenu>
+
+            <p:outputLabel value="Imagem"></p:outputLabel>
+            <p:fileUpload listener="#{produtoBean.handleFileUpload}"
+              mode="advanced" auto="true"
+              sizeLimit="5242880"
+              update="imgPreview"
+              label="Escolher imagem" uploadLabel="Enviar" cancelLabel="Cancelar" />
+
+            <p:outputLabel value="Prévia"></p:outputLabel>
+            <p:graphicImage id="imgPreview" value="#{request.contextPath}/imagens/produtos/#{produtoBean.entidade.caminhoImagem}"
+                             rendered="#{not empty produtoBean.entidade.caminhoImagem}" width="150"></p:graphicImage>
+        </p:panelGrid>
+
+        <p:dataTable value="#{produtoBean.entidades}" var="p" rendered="#{produtoBean.estadoCrud == 'LISTAR'}"
+                     paginator="true" rows="10" filteredValue="#{produtoBean.entidades}">
+            <p:column>
+                <p:commandButton value="Editar" icon="pi pi-pencil" actionListener="#{produtoBean.editar(p)}" update=":form"></p:commandButton>
+                <p:commandButton value="Excluir" icon="pi pi-trash" actionListener="#{produtoBean.excluir(p)}" update=":form">
+                    <p:confirm header="Confirmação" message="Deseja realmente excluir o produto '#{p.nome}'?" icon="pi pi-exclamation-triangle"></p:confirm>
+                </p:commandButton>
+            </p:column>
+            <p:column headerText="Imagem">
+                <p:graphicImage value="#{request.contextPath}/imagens/produtos/#{p.caminhoImagem}"
+                                rendered="#{not empty p.caminhoImagem}" width="60"></p:graphicImage>
+            </p:column>
+            <p:column headerText="Id" sortBy="#{p.id}">
+                #{p.id}
+            </p:column>
+            <p:column headerText="Nome" sortBy="#{p.nome}" filterBy="#{p.nome}">
+                #{p.nome}
+            </p:column>
+            <p:column headerText="Marca">
+                #{p.marca.nome}
+            </p:column>
+            <p:column headerText="Categoria">
+                #{p.categoria.caminhoHierarquico}
+            </p:column>
+            <p:column headerText="Preço" sortBy="#{p.preco}">
+                <h:outputText value="#{p.preco}">
+                    <f:convertNumber type="currency" currencySymbol="R$ "></f:convertNumber>
+                </h:outputText>
+            </p:column>
+            <p:column headerText="Estoque" sortBy="#{p.quantidadeEstoque}">
+                #{p.quantidadeEstoque}
+            </p:column>
+        </p:dataTable>
+
+        <p:confirmDialog global="true">
+            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"></p:commandButton>
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"></p:commandButton>
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>
